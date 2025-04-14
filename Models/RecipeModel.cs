@@ -8,7 +8,8 @@ namespace recipeAPI.Models
         public string Name { get; set; }
         [JsonIgnore]
         public string Instructions { get; set; }
-        public ICollection<RecipeItemModel> Ingredients { get; set; }
+        [JsonIgnore]
+        public ICollection<RecipeItemModel> Ingredients { get; set; } = new List<RecipeItemModel>();
 
 
     }

@@ -1,0 +1,74 @@
+[
+  {
+    "ContainingType": "recipeAPI.Controllers.RecipeController",
+    "Method": "GetRecipeByIngredient",
+    "RelativePath": "api/Recipe/GetRecipeByIngredient/{idIngredient}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idIngredient",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "recipeAPI.Models.ResponseModel\u00601[[recipeAPI.Models.RecipeModel, recipeAPI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "recipeAPI.Controllers.RecipeController",
+    "Method": "GetRecipes",
+    "RelativePath": "api/Recipe/GetRecipes",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "recipeAPI.Models.ResponseModel\u00601[[System.Collections.Generic.List\u00601[[recipeAPI.Models.RecipeModel, recipeAPI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "recipeAPI.Controllers.RecipeController",
+    "Method": "GetRecipesById",
+    "RelativePath": "api/Recipe/GetRecipesById/{recipeId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "recipeId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "recipeAPI.Models.ResponseModel\u00601[[recipeAPI.Models.RecipeModel, recipeAPI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  }
+]
