@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using recipeAPI.Controllers;
 using recipeAPI.Data;
+using recipeAPI.Services.Ingredient;
 using recipeAPI.Services.Recipe;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +14,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IRecipeInterface, RecipeService>();
+builder.Services.AddScoped<IIngrendientInterface, IngredientService>();
 
 builder.Services.AddDbContext<AppDbContext>(options => 
 {

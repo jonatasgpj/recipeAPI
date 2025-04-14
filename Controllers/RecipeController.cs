@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using recipeAPI.Dto.Recipe;
 using recipeAPI.Models;
 using recipeAPI.Services.Recipe;
 
@@ -38,6 +38,31 @@ namespace recipeAPI.Controllers
             return Ok(recipe);
 
         }
+
+        [HttpPost("CreateRecipe")]
+        public async Task<ActionResult<ResponseModel<RecipeModel>>> CreateRecipe(CreateRecipeDto createRecipeDto)
+        {
+            var recipes = await _recipeInterface.CreateRecipe(createRecipeDto);
+            return Ok(recipes);
+
+        }
+
+        [HttpPut("UpdateRecipe")]
+        public async Task<ActionResult<ResponseModel<List<RecipeModel>>>> UpdateRecipe(UpdateRecipeDto updateRecipeDto)
+        {
+            var recipes = await _recipeInterface.UpdateRecipe(updateRecipeDto);
+            return Ok(recipes);
+
+        }
+
+        [HttpDelete("DeleteRecipe")]
+        public async Task<ActionResult<ResponseModel<List<RecipeModel>>>> DeleteRecipe(int idRecipe)
+        {
+            var recipes = await _recipeInterface.DeleteRecipe(idRecipe);
+            return Ok(recipes);
+
+        }
+
 
 
     }
