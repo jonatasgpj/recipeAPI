@@ -34,7 +34,7 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "idIngredient",
+        "Name": "ingredientId",
         "Type": "System.Int32",
         "IsRequired": false
       }

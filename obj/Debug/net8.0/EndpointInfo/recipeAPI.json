@@ -177,7 +177,7 @@
         ],
         "parameters": [
           {
-            "name": "idIngredient",
+            "name": "ingredientId",
             "in": "query",
             "schema": {
               "type": "integer",
@@ -640,6 +640,13 @@
           },
           "instructions": {
             "type": "string",
+            "nullable": true
+          },
+          "ingredients": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreateRecipeItemDto"
+            },
             "nullable": true
           }
         },

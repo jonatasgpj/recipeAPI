@@ -189,7 +189,9 @@ namespace recipeAPI.Services.Recipe
             ResponseModel<List<RecipeModel>> response = new ResponseModel<List<RecipeModel>>();
             try
             {
-                var recipe = await _context.Recipes.FirstOrDefaultAsync(recipeDb => recipeDb.Id == updateRecipeDto.Id);
+                var recipe = await _context.Recipes
+                    .Include(i => i.Ingredients)
+                    .FirstOrDefaultAsync(recipeDb => recipeDb.Id == updateRecipeDto.Id);
                 if (recipe == null)
                 {
                     response.Message = "recipe not found";
@@ -197,6 +199,15 @@ namespace recipeAPI.Services.Recipe
                 }
                 recipe.Name = updateRecipeDto.Name;
                 recipe.Instructions = updateRecipeDto.Instructions;
+
+                _context.RecipeItems.RemoveRange(recipe.Ingredients);
+
+                recipe.Ingredients = updateRecipeDto.Ingredients.Select(i => new RecipeItemModel
+                {
+                    RecipeId = recipe.Id,
+                    IngredientId = i.IngredientId,
+                    Quantity = i.Quantity
+                }).ToList();
 
                 _context.Update(recipe);
                 await _context.SaveChangesAsync();

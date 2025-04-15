@@ -52,9 +52,9 @@ namespace recipeAPI.Controllers
         }
 
         [HttpDelete("DeleteIngredient")]
-        public async Task<ActionResult<ResponseModel<List<IngredientModel>>>> DeleteIngredient(int idIngredient)
+        public async Task<ActionResult<ResponseModel<List<IngredientModel>>>> DeleteIngredient(int ingredientId)
         {
-            var recipes = await _IngredientInterface.DeleteIngredient(idIngredient);
+            var recipes = await _IngredientInterface.DeleteIngredient(ingredientId);
             return Ok(recipes);
 
         }
