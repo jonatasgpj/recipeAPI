@@ -4,8 +4,6 @@
 Essa API permite o gerenciamento de receitas e ingredientes. 
 É possível criar, listar, atualizar e deletar receitas e ingredientes, além de buscar receitas que possuem vários ingredientes associados, com quantidade e unidade.
 
-## 📌 Diagrama UML Simplificado
-
 ```text
 +-------------------+         +---------------------+        +-------------------+
 |    Recipe         | 1     * |   RecipeItem        | *    1 |   Ingredient       |
