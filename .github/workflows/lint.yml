@@ -16,7 +16,7 @@ jobs:
         with:
           dotnet-version: '8.0.x'
       - name: Restore
-        run: dotnet restore recipeAPI.sln
+        run: dotnet restore recipeAPI.csproj
       - name: Lint
         run: dotnet format
 
