@@ -1,0 +1,23 @@
+name: lint.yml
+on:
+  pull_request:
+    branches:
+      -main
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+        
+      - name: Setup .NET 8.x
+        uses: actions/setup-dotnet@v4
+        with:
+          cache: 'true'
+          dotnet-version: '*8.0.x'
+      - name: Restore
+        run: dotnet restore recipeAPI.sln
+      - name: Lint
+        run: dotnet format
+
