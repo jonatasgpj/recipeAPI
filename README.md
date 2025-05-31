@@ -22,3 +22,6 @@ Essa API permite o gerenciamento de receitas e ingredientes.
 - CRUD completo de ingredientes:
   - Criar, listar, buscar por ID, atualizar e deletar
 - Buscar receitas por ingrediente
+
+
+git action teste
