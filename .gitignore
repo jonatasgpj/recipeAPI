@@ -7,50 +7,54 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/main/Dotnet.gitignore
 
-# Build results
-[Dd]ebug/
-[Dd]ebugPublic/
-[Rr]elease/
-[Rr]eleases/
-x64/
-x86/
-[Ww][Ii][Nn]32/
-[Aa][Rr][Mm]/
-[Aa][Rr][Mm]64/
-bld/
-[Bb]in/
-[Oo]bj/
-[Ll]og/
-[Ll]ogs/
+## .gitignore para projeto .NET moderno com estrutura src/ e tests/
+## Baseado em https://github.com/github/gitignore/blob/main/Dotnet.gitignore
 
-# .NET Core
+
+bin/
+obj/
+*.user
+*.rsuser
+*.suo
+*.userosscache
+*.sln.docstates
+
+*.nupkg
+*.snupkg
+*.log
+*.tmp
+*.bak
+*.old
+*.sdf
+*.dbmdl
+
+TestResult*/
+buildlog.*
+.vscode/
+.idea/
+
+app/
+*.db
+*.sqlite
+*.pfx
+*.publishsettings
+
 project.lock.json
 project.fragment.lock.json
 artifacts/
 
-# ASP.NET Scaffolding
-ScaffoldingReadMe.txt
-
-# NuGet Packages
-*.nupkg
-# NuGet Symbol Packages
-*.snupkg
-
-# Others
-~$*
-*~
-CodeCoverage/
-
-# MSBuild Binary and Structured Log
-*.binlog
-
-# MSTest test Results
-[Tt]est[Rr]esult*/
-[Bb]uild[Ll]og.*
-
-# NUnit
-*.VisualState.xml
-TestResult.xml
-nunit-*.xml
-#dados sensiveis
 appsettings.json
+appsettings.Development.json
+
+*.coverage
+*.coveragexml
+*.codecoverage
+*.trx
+*.xcresult
+*.testresults
+
+src/**/bin/
+src/**/obj/
+tests/**/bin/
+tests/**/obj/
+
