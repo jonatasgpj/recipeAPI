@@ -2,7 +2,7 @@
 {
     public class CreateIngredientDto
     {
-        public string Name { get; set; }
-        public string Unit { get; set; }
+        public required string Name { get; set; } 
+        public required string Unit { get; set; }
     }
 }

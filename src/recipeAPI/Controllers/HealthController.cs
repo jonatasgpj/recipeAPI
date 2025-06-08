@@ -10,19 +10,18 @@ namespace recipeAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class healthController : ControllerBase
+    public class HealthController : ControllerBase
     {
 
-        public healthController()
+        public HealthController()
         {
         }
 
         [HttpGet("")]
-        public async Task<ActionResult<ResponseModel<List<IngredientModel>>>> Gethealth()
+        public async Task<IActionResult> GetHealth()
         {
-            var response = "Response - OK";
-            return Ok(response);
-
+            await Task.CompletedTask;
+            return Ok("Response - OK");
         }
 
     }
