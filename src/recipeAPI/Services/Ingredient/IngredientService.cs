@@ -106,7 +106,7 @@ namespace recipeAPI.Services.Ingredient
 
                 response.Data = ingredients;
 
-                
+
                 response.Message = "all ingredients have been listed";
                 return response;
 
