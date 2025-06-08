@@ -24,6 +24,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 var app = builder.Build();
 app.UseDefaultFiles(); // Ativa index.html automaticamente
 app.UseStaticFiles();  // Serve arquivos da pasta wwwroot
+// Teste de lint no Pull Request
 
 // Configure the HTTP request pipeline.
 //if (app.Environment.IsDevelopment())
