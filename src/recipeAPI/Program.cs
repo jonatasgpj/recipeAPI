@@ -1,8 +1,13 @@
 using Microsoft.EntityFrameworkCore;
-using recipeAPI.Controllers;
 using recipeAPI.Data;
 using recipeAPI.Services.Ingredient;
 using recipeAPI.Services.Recipe;
+using OpenTelemetry;
+using OpenTelemetry.Trace;
+using OpenTelemetry.Logs;
+using OpenTelemetry.Resources;
+
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,7 +26,25 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
+builder.Logging.AddConsole();
+builder.Logging.AddOpenTelemetry(options =>
+{
+    options.IncludeFormattedMessage = true;
+    options.SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("recipeAPI"));
+    options.AddOtlpExporter(opt =>
+    {
+        opt.Endpoint = new Uri("http://localhost:4317");
+    });
+});
+
+
+
+
 var app = builder.Build();
+
+var logger = app.Services.GetRequiredService<ILogger<Program>>();
+logger.LogInformation("Iniciando aplicação com OpenTelemetry.");
+
 app.UseDefaultFiles(); // Ativa index.html automaticamente
 app.UseStaticFiles();  // Serve arquivos da pasta wwwroot
                        // Teste de lint no Pull Request

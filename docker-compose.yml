@@ -1,0 +1,100 @@
+name: monitoring
+
+volumes:
+  grafana_data: {}
+  prometheus_data: {}
+  loki_data: {}
+
+networks:
+  prometheus:
+  loki:
+
+
+services:
+  grafana:
+    image: grafana/grafana:11.6.2
+    ports:
+      - 3000:3000
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./config/grafana/grafana.ini/:/etc/grafana/grafana.ini
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    restart: on-failure
+    networks:
+      - prometheus
+      - loki
+  prometheus:
+    image: prom/prometheus:v3.4.1
+    ports:
+      - 9090:9090
+    volumes:
+      - prometheus_data:/prometheus
+      - ./config/prometheus/:/etc/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention.time=60d'
+      - '--web.enable-remote-write-receiver'
+      - '--enable-feature=native-histograms'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+    restart: on-failure
+    networks:
+      - prometheus
+
+  node-exporter:
+    image: quay.io/prometheus/node-exporter:latest
+    volumes:
+      - '/:/host:ro,rslave'
+    command:
+      - '--path.rootfs=/host'
+    network_mode: host
+    pid: host
+    restart: unless-stopped
+
+  loki:
+    image: grafana/loki:3.5.1
+    ports:
+      - 3100:3100
+    command: -config.file=/etc/loki/local-config.yaml
+    volumes:
+      - ./config/loki/config.yaml:/etc/loki/config.yaml
+      - ./loki/tsdb:/data/tsdb
+      - ./loki/retention:/data/retention
+    restart: on-failure
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3100/ready || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      loki:
+        aliases:
+          - loki
+
+  promtail:
+    image: grafana/promtail:latest
+    volumes:
+      - /var/log:/var/log
+    command: -config.file=/etc/promtail/config.yml
+    networks:
+      - loki
+    restart: on-failure
+
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:latest
+    command: ["--config=/etc/otel-collector-config.yaml"]
+    volumes:
+      - ./config/otel/otel-collector-config.yaml:/etc/otel-collector-config.yaml
+    ports:
+      - "4317:4317"  # gRPC (OTLP)
+      - "4318:4318"  # HTTP (opcional)
+    depends_on:
+      - loki
+
+    networks:
+      - loki
+
+
