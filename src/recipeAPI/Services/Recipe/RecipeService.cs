@@ -9,7 +9,7 @@ namespace recipeAPI.Services.Recipe
     public class RecipeService : IRecipeInterface
     {
         private readonly AppDbContext _context;
-        public RecipeService(AppDbContext context) 
+        public RecipeService(AppDbContext context)
         {
             _context = context;
         }
@@ -26,7 +26,7 @@ namespace recipeAPI.Services.Recipe
                     Ingredients = new List<RecipeItemModel>()
                 };
 
-                foreach (var item in createRecipeDto.Ingredients) 
+                foreach (var item in createRecipeDto.Ingredients)
                 {
                     var recipeItem = new RecipeItemModel
                     {
@@ -93,13 +93,13 @@ namespace recipeAPI.Services.Recipe
             try
             {
                 var recipe = await _context.Recipes
-                    .Include(r=> r.Ingredients)
+                    .Include(r => r.Ingredients)
                     .ThenInclude(i => i.Ingredient)
                     .FirstOrDefaultAsync(recipeDb => recipeDb.Id == idRecipe);
-                if (recipe == null) 
+                if (recipe == null)
                 {
                     response.Message = "no recipe found";
-                    return response; 
+                    return response;
                 }
                 var recipeDto = new RecipeResponseDto
                 {
@@ -131,7 +131,7 @@ namespace recipeAPI.Services.Recipe
                 response.Status = false;
                 return response;
             }
-            
+
         }
 
         public async Task<ResponseModel<RecipeModel>> GetRecipeByIngredient(int idIngredient)
@@ -171,7 +171,7 @@ namespace recipeAPI.Services.Recipe
 
                 response.Data = recipes;
 
-                
+
                 response.Message = "all recipes have been listed";
                 return response;
 

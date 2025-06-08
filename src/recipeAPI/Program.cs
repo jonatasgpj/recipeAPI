@@ -16,7 +16,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IRecipeInterface, RecipeService>();
 builder.Services.AddScoped<IIngrendientInterface, IngredientService>();
 
-builder.Services.AddDbContext<AppDbContext>(options => 
+builder.Services.AddDbContext<AppDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
@@ -24,12 +24,13 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 var app = builder.Build();
 app.UseDefaultFiles(); // Ativa index.html automaticamente
 app.UseStaticFiles();  // Serve arquivos da pasta wwwroot
+                       // Teste de lint no Pull Request
 
 // Configure the HTTP request pipeline.
 //if (app.Environment.IsDevelopment())
 //{
-    app.UseSwagger();
-    app.UseSwaggerUI();
+app.UseSwagger();
+app.UseSwaggerUI();
 //}
 
 // using (var scope = app.Services.CreateScope())
