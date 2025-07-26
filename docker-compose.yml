@@ -5,14 +5,9 @@ volumes:
   prometheus_data: {}
   loki_data: {}
 
-networks:
-  prometheus:
-  loki:
-
-
 services:
   grafana:
-    image: grafana/grafana:11.6.2
+    image: grafana/grafana:12.0.0
     ports:
       - 3000:3000
     volumes:
@@ -21,10 +16,9 @@ services:
     environment:
       - GF_SECURITY_ADMIN_USER=admin
       - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_FEATURE_TOGGLES_ENABLE=traceqlEditor metricsSummary
+      - GF_INSTALL_PLUGINS=https://storage.googleapis.com/integration-artifacts/grafana-exploretraces-app/grafana-exploretraces-app-latest.zip;grafana-traces-app
     restart: on-failure
-    networks:
-      - prometheus
-      - loki
   prometheus:
     image: prom/prometheus:v3.4.1
     ports:
@@ -38,21 +32,21 @@ services:
       - '--storage.tsdb.retention.time=60d'
       - '--web.enable-remote-write-receiver'
       - '--enable-feature=native-histograms'
+      - '--enable-feature=exemplar-storage'
       - '--web.console.libraries=/usr/share/prometheus/console_libraries'
       - '--web.console.templates=/usr/share/prometheus/consoles'
     restart: on-failure
-    networks:
-      - prometheus
-
-  node-exporter:
-    image: quay.io/prometheus/node-exporter:latest
-    volumes:
-      - '/:/host:ro,rslave'
-    command:
-      - '--path.rootfs=/host'
     network_mode: host
-    pid: host
-    restart: unless-stopped
+
+  # node-exporter:
+  #   image: quay.io/prometheus/node-exporter:latest
+  #   volumes:
+  #     - '/:/host:ro,rslave'
+  #   command:
+  #     - '--path.rootfs=/host'
+  #   network_mode: host
+  #   pid: host
+  #   restart: unless-stopped
 
   loki:
     image: grafana/loki:3.5.1
@@ -69,32 +63,77 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-    networks:
-      loki:
-        aliases:
-          - loki
 
-  promtail:
-    image: grafana/promtail:latest
-    volumes:
-      - /var/log:/var/log
-    command: -config.file=/etc/promtail/config.yml
-    networks:
-      - loki
-    restart: on-failure
+  # promtail:
+  #   image: grafana/promtail:latest
+  #   volumes:
+  #     - /var/log:/var/log
+  #   command: -config.file=/etc/promtail/config.yml
+  #   network_mode: host
+  #   restart: on-failure
 
-  otel-collector:
-    image: otel/opentelemetry-collector-contrib:latest
-    command: ["--config=/etc/otel-collector-config.yaml"]
+  # otel-collector:
+  #   image: otel/opentelemetry-collector-contrib:latest
+  #   command: ["--config=/etc/otel-collector-config.yaml"]
+  #   volumes:
+  #     - ./config/otel/otel-collector-config.yaml:/etc/otel-collector-config.yaml
+  #   ports:
+  #     - "44317:4317"  # gRPC (OTLP)
+  #     - "44318:4318"  # HTTP (opcional)
+  #   depends_on:
+  #     - loki
+
+  #   network_mode: host
+
+
+  init-tempo:
+    image: &tempoImage grafana/tempo:2.8.0
+    user: root
+    entrypoint:
+      - "chown"
+      - "10001:10001"
+      - "/var/tempo"
     volumes:
-      - ./config/otel/otel-collector-config.yaml:/etc/otel-collector-config.yaml
+      - ./tempo-data:/var/tempo
+
+  memcached:
+    image: memcached:1.6.38
+    container_name: memcached
     ports:
-      - "4317:4317"  # gRPC (OTLP)
-      - "4318:4318"  # HTTP (opcional)
-    depends_on:
-      - loki
+      - "11211:11211"
+    restart: on-failure
+    environment:
+      - MEMCACHED_MAX_MEMORY=64m
+      - MEMCACHED_THREADS=4
+  tempo:
+    image: *tempoImage
+    command: [ "-config.file=/etc/tempo.yaml" ]
+    volumes:
+      - ./config/tempo/tempo.yaml:/etc/tempo.yaml
+      - ./tempo-data:/var/tempo
+    ports:
+      - "3200:3200"
+      - "4317:4317"
+      - "4318:4318"
 
-    networks:
-      - loki
+    restart: on-failure
+    depends_on:
+      - init-tempo
+      - memcached
+    
+  # k6-tracing:
+  #   image: ghcr.io/grafana/xk6-client-tracing:v0.0.7
+  #   environment:
+  #     - ENDPOINT=tempo:4317
+  #   restart: always
+  #   depends_on:
+  #     - tempo
+  #   network_mode: host
+
+
+
+
+
+
 
 
